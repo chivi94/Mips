@@ -1,0 +1,18 @@
+.data
+	dimen: .space 64
+.text
+main:
+	la $s0, dimen
+	addi $s1, $zero, 4	# marca de bifurcación
+	addi $s2, $zero, 1	# contador i 
+	addi $s3, $zero, 1	# contador j
+	addi $s4, $zero, 1	# contador dimen
+	addi $s6, $zero, 1	# 1
+	addi $s5, $zero, 10
+BucPr:
+	sll $t0, $s4, 2		# multiplicamos por 4 el contador
+	add $t1, $t0, $s0	# sumamos el desplazamiento
+	lw $t2, 0($t1)		# cargamos posicion del vector
+	mult $t3, $s2, $s7 	# (10*i)
+	
+	
