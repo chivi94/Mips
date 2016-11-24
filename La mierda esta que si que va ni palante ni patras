@@ -1,30 +1,80 @@
-              .data
-prueba:       .asciiz "01/02/2009"
-prueba1:      .asciiz "01/02/2014"
+		  .data
+	cad1: .asciiz "Entre el "
+	cad2: .asciiz " y el "
+	de: .asciiz " de "
+	del: .asciiz " del "
+	cad3: .asciiz " han pasado "
+	cad4: .asciiz " dias."
+	
+	dia1: .asciiz "Lunes"
+	dia2: .asciiz "Martes"
+	dia3: .asciiz "Miercoles"
+	dia4: .asciiz "Jueves"
+	dia5: .asciiz "Viernes"
+	dia6: .asciiz "Sabado"
+	dia7: .asciiz "Domingo"
+	
+	mes1: .asciiz "Enero"
+	mes2: .asciiz "Febrero"
+	mes3: .asciiz "Marzo"
+	mes4: .asciiz "Abril"
+	mes5: .asciiz "Mayo"
+	mes6: .asciiz "Junio"
+	mes7: .asciiz "Julio"
+	mes8: .asciiz "Agosto"
+	mes9: .asciiz "Septiembre"
+	mes10: .asciiz "Octubre"
+	mes11: .asciiz "Noviembre"
+	mes12: .asciiz "Diciembre"
+	
+	fecha1: .space 100
+	fecha2: .space 100
+	pedida1: .asciiz "Introduzca la primera fecha con formato dd/mm/aa: "
+	pedida2: .asciiz "Introduzca la segunda fecha con formato dd/mm/aa: "
               .text
 
 
               #Fecha 1
-main:         la $a0, prueba
-
+main:         
+		la $a0, pedida1
+		li $v0, 4
+		syscall 
+		
+		la $a0, fecha1
+		addi $a1, $zero, 12
+		li $v0, 8
+		syscall
+		
+		
+		
+	      la $a0, fecha1
               jal leerFecha
               add $s0, $zero, $v0
               add $s1, $zero, $v1
               jal leerFecha2       #Nos devuelve el año
               add $s2, $v0, $zero  #guardamos el resultado en s2
+              
               #Fecha 2
-              la $a0, prueba1
+              la $a0, pedida2
+		li $v0, 4
+		syscall 
+              
+              la $a0, fecha2
+		addi $a1, $zero, 12
+		li $v0, 8
+		syscall
+              la $a0, fecha2
 
               jal leerFecha
               add $s3, $zero, $v0
               add $s4, $zero, $v1
               jal leerFecha2       #Nos devuelve el año
               add $s5, $v0, $zero  #guardamos el resultado en s2
-
               add $a0, $zero, $s2
               add $a1, $zero, $s5
 
               jal lessOrHigherThan
+		  
 
               add $t0, $zero, $v0			#Debemos comprobar que nos devuelve el metodo
               add $t1, $zero, $zero
@@ -53,7 +103,7 @@ main:         la $a0, prueba
                    add $a1, $zero, $s3
 
                    jal lessOrHigherThan
-
+ 
                    add $t0, $zero, $v0			#Debemos comprobar que nos devuelve el metodo
                    add $t1, $zero, $zero
                    addi $t2, $zero, -1
@@ -72,6 +122,7 @@ main:         la $a0, prueba
               j Continue					#Saltamos a continuar
 
  SegundoMenorQuePrimero:#Si el primer año es menor que el segundo
+ 
               add $a0, $zero, $s5 #Primer argumento = segundo año
               add $a1, $zero, $s2#Segundo argumento = primer año
               add $t0, $zero, $s2
@@ -93,13 +144,10 @@ main:         la $a0, prueba
               add $a0, $zero, $s0
               add $a1, $zero, $s1
               add $a2, $zero, $s2
+                        
               jal CheckMonth
               sub $s6, $s6, $v0 #Restamos el mes
               sub $s6, $s6, $s0 #Restamos el dia
-              add $a0, $v0, $zero
-              li  $v0, 1
-              syscall
-
 
               add $a0, $zero, $s3
               add $a1, $zero, $s4
@@ -107,22 +155,295 @@ main:         la $a0, prueba
               jal CheckMonth
               add $s6, $s6, $v0 #Sumamos el mes
               add $s6, $s6, $s3 #Sumamos el dia
-              add $a0, $v0, $zero
+		
+		
+	      la $a0, cad1
+              li  $v0, 4
+              syscall
+              
+              add $a0, $s0, $zero
+              add $a1, $s1, $zero
+              add $a2, $s2, $zero
+       	      jal diaFecha
+       	      
+       	      
+       	beq $v0, 1, Lunes
+       	beq $v0, 2, Martes
+        beq $v0, 3, Miercoles
+        beq $v0, 4, Jueves
+        beq $v0, 5, Viernes
+        beq $v0, 6, Sabado
+        beq $v0, 0, Domingo
+        
+        
+        Lunes: la $a0, dia1
+        	li $v0, 4
+        	syscall
+        	j delMes
+        Martes: la $a0, dia2
+        	li $v0, 4
+        	syscall
+        	j delMes
+       Miercoles: la $a0, dia3
+        	li $v0, 4
+        	syscall
+        	j delMes
+       Jueves: la $a0, dia4
+        	li $v0, 4
+        	syscall
+        	j delMes
+       Viernes: la $a0, dia5
+        	li $v0, 4
+        	syscall
+        	j delMes
+        Sabado: la $a0, dia6
+        	li $v0, 4
+        	syscall
+        	j delMes
+       Domingo: la $a0, dia7
+        	li $v0, 4
+        	syscall
+        
+        delMes:
+        	addi $a0, $zero, 32
+        	li $v0, 11
+        	syscall
+        	
+         	add $a0, $s0, $zero
+        	li $v0, 1
+        	syscall
+        	
+        	la $a0, de
+        	li $v0, 4
+        	syscall
+
+        beq $s1, 1, Enero
+       	beq $s1, 2, febrero
+        beq $s1, 3, Marzo
+        beq $s1, 4, Abril
+        beq $s1, 5, Mayo
+        beq $s1, 6, Junio
+        beq $s1, 7, Julio
+        beq $s1, 8, Agosto
+        beq $s1, 9, Septiembre
+        beq $s1, 10, Octubre
+        beq $s1, 11, Noviembre
+        beq $s1, 12, Diciembre
+        
+        
+         Enero: la $a0, mes1
+        	li $v0, 4
+        	syscall
+        	j delAnio
+        febrero: la $a0, mes2
+        	li $v0, 4
+        	syscall
+        	j delAnio
+       Marzo: la $a0, mes3
+        	li $v0, 4
+        	syscall
+        	j delAnio
+       Abril: la $a0, mes4
+        	li $v0, 4
+        	syscall
+        	j delAnio
+       Mayo: la $a0, mes5
+        	li $v0, 4
+        	syscall
+        	j delAnio
+        Junio: la $a0, mes6
+        	li $v0, 4
+        	syscall
+        	j delAnio
+       Julio: la $a0, mes7
+        	li $v0, 4
+        	syscall 
+        Agosto: la $a0, mes8
+        	li $v0, 4
+        	syscall
+        	j delAnio
+       Septiembre: la $a0, mes9
+        	li $v0, 4
+        	syscall
+        	j delAnio
+       Octubre: la $a0, mes10
+        	li $v0, 4
+        	syscall
+        	j delAnio
+        Noviembre: la $a0, mes11
+        	li $v0, 4
+        	syscall
+        	j delAnio
+       Diciembre: la $a0, mes12
+        	li $v0, 4
+        	syscall
+       	      
+        delAnio:
+              la $a0, del
+        	li $v0, 4
+        	syscall 
+        
+        	add $a0, $s2, $zero
+        	li $v0, 1
+        	syscall
+                         
+              la $a0, cad2
+              li  $v0, 4
+              syscall
+              
+              
+              				add $a0, $s3, $zero
+              add $a1, $s4, $zero
+              add $a2, $s5, $zero
+       	      jal diaFecha
+       	      
+       	      
+       	beq $v0, 1, Lunes2
+       	beq $v0, 2, Martes2
+        beq $v0, 3, Miercoles2
+        beq $v0, 4, Jueves2
+        beq $v0, 5, Viernes2
+        beq $v0, 6, Sabado2
+        beq $v0, 0, Domingo2
+        
+        
+        Lunes2: la $a0, dia1
+        	li $v0, 4
+        	syscall
+        	j delMes2
+        Martes2: la $a0, dia2
+        	li $v0, 4
+        	syscall
+        	j delMes2
+       Miercoles2: la $a0, dia3
+        	li $v0, 4
+        	syscall
+        	j delMes2
+       Jueves2: la $a0, dia4
+        	li $v0, 4
+        	syscall
+        	j delMes2
+       Viernes2: la $a0, dia5
+        	li $v0, 4
+        	syscall
+        	j delMes2
+        Sabado2: la $a0, dia6
+        	li $v0, 4
+        	syscall
+        	j delMes2
+       Domingo2: la $a0, dia7
+        	li $v0, 4
+        	syscall
+        
+        delMes2:
+        	addi $a0, $zero, 32
+        	li $v0, 11
+        	syscall
+        	
+         	add $a0, $s3, $zero
+        	li $v0, 1
+        	syscall
+        	
+        	la $a0, de
+        	li $v0, 4
+        	syscall
+
+        beq $s4, 1, Enero2
+       	beq $s4, 2, febrero2
+        beq $s4, 3, Marzo2
+        beq $s4, 4, Abril2
+        beq $s4, 5, Mayo2
+        beq $s4, 6, Junio2
+        beq $s4, 7, Julio2
+        beq $s4, 8, Agosto2
+        beq $s4, 9, Septiembre2
+        beq $s4, 10, Octubre2
+        beq $s4, 11, Noviembre2
+        beq $s4, 12, Diciembre2
+        
+        
+         Enero2: la $a0, mes1
+        	li $v0, 4
+        	syscall
+        	j delAnio2
+        febrero2: la $a0, mes2
+        	li $v0, 4
+        	syscall
+        	j delAnio2
+       Marzo2: la $a0, mes3
+        	li $v0, 4
+        	syscall
+        	j delAnio2
+       Abril2: la $a0, mes4
+        	li $v0, 4
+        	syscall
+        	j delAnio2
+       Mayo2: la $a0, mes5
+        	li $v0, 4
+        	syscall
+        	j delAnio2
+        Junio2: la $a0, mes6
+        	li $v0, 4
+        	syscall
+        	j delAnio2
+       Julio2: la $a0, mes7
+        	li $v0, 4
+        	syscall 
+        Agosto2: la $a0, mes8
+        	li $v0, 4
+        	syscall
+        	j delAnio2
+       Septiembre2: la $a0, mes9
+        	li $v0, 4
+        	syscall
+        	j delAnio2
+       Octubre2: la $a0, mes10
+        	li $v0, 4
+        	syscall
+        	j delAnio2
+        Noviembre2: la $a0, mes11
+        	li $v0, 4
+        	syscall
+        	j delAnio2
+       Diciembre2: la $a0, mes12
+        	li $v0, 4
+        	syscall
+       	      
+        delAnio2:
+              la $a0, del
+        	li $v0, 4
+        	syscall 
+        
+        	add $a0, $s5, $zero
+        	li $v0, 1
+        	syscall
+              
+              la $a0, cad3
+              li  $v0, 4
+              syscall
+              
+              add $a0, $s6 $zero
               li  $v0, 1
               syscall
+              
+              la $a0, cad4
+              li  $v0, 4
+              syscall
+		
+		
 
               li $v0, 10
               syscall
 
 #Funcion que sumar dias, desde el anio mas pequenio de los introducidos, hasta el anterior al mas grande.
 adeDays:
-						add $s7, $zero, $ra			#Puntero desde donde se llama a la funci�n
+						add $s7, $zero, $ra			#Puntero desde donde se llama a la funci?n
 						add $v0, $zero, $zero			#El registro para los resultados lo iniciamos a cero para evitar posibles fallos.
-						add $t9, $zero, $zero			#A�o menor
-						add $t8, $zero, $zero			#A�o mayor
+						add $t9, $zero, $zero			#A?o menor
+						add $t8, $zero, $zero			#A?o mayor
 						add $t7, $zero, $zero			#Resultado
-
-
+						
+						beq $a0, $a1, exitAde
 						add $t9, $t9, $a0				  #A?o menor
 						addi $t8, $a1, -1				  #A?o mayor
 		Loop_1: 		        add $a0, $zero, $t9
@@ -132,9 +453,9 @@ adeDays:
 						j Continuar					#Continuamos
 		SumarBis: 			addi $t7, $t7, 366				#Si es bisiesto, sumamos 366  dias
 		Continuar: 			beq $t9, $t8, exitAde				#Si $t9== $t8...
-						addi $t9, $t9, 1				#Aumentamos el a�o mayor en 1. $t9++.
+						addi $t9, $t9, 1				#Aumentamos el a?o mayor en 1. $t9++.
 						b Loop_1				        #Si no, seguimos el bucle
-		exitAde:		        add $v0, $zero, $t7				#...termina la funci�n
+		exitAde:		        add $v0, $zero, $t7				#...termina la funci?n
 						add $ra, $zero, $s7
 						jr $ra
 
@@ -168,11 +489,11 @@ leanOrNotLean:
 #Funcion que comprobar si dos digitos son iguales o distintos. Criterio: Iguales -> 0
 #Primero<Segundo-> -1. Segundo < Primero -> -2. Los registros ser?n $
 lessOrHigherThan:
-			add $s0, $zero, $a0		#Primer d?gito
-			add $s1, $zero, $a1		#Segundo d?gito
+			add $t0, $zero, $a0		#Primer d?gito
+			add $t1, $zero, $a1		#Segundo d?gito
 
-			beq $s0, $s1, Same		#If primero == segundo -> 0.
-			blt $s0, $s1, Less		#If primero < segundo -> -1.
+			beq $t0, $t1, Same		#If primero == segundo -> 0.
+			blt $t0, $t1, Less		#If primero < segundo -> -1.
 			addi $v0, $zero, -2		#Si no, -2.
 			b ExitCheck
 
@@ -202,6 +523,7 @@ leerFecha:add   $t0, $a0, $zero             #Cargamos la direcion de la cadena e
           lb    $t2, 4($t0)                 #cargamos el segundo byte y lo convertimos a entero
           addi  $t2, $t2, -48
           add   $v1, $t1, $t2               #almacenamos el resultado del mes en el registro v1
+	  
 
           jr $ra                            #acabamos la Funcion
 
@@ -230,6 +552,7 @@ CheckMonth:add $t7, $zero, $ra
         add $t0, $a0, $zero              #Dia
         add $t8, $a1, $zero              #Mes
         add $t9, $a2, $zero              #Año
+
         add  $a0, $t9, $zero
         jal leanOrNotLean
         add $t6, $zero, $zero
@@ -262,14 +585,66 @@ CheckMonth:add $t7, $zero, $ra
          addi $t4, $zero, 29
 
 
-
-
  Continuar2:
  fin:
         add  $t6, $t4, $t6
         addi $t8, $t8, -1
         j switch
-  exitSwitch:
+  exitSwitch:     
         add  $v0, $t6, $zero
         add  $ra, $t7, $zero
         jr $ra
+
+diaFecha:
+	add $t9, $a0, $zero		#Dia
+	add $t0, $a1, $zero		#Mes
+	add $t1, $a2 $zero		#Año
+
+	#a = (14 - mes) / 12
+	addi $t5, $zero, 12		
+	addi $t2, $zero, 14
+	sub $t2, $t2, $t0		
+	div $t2, $t5
+	mflo $t2
+	
+	#y = año - a
+	add $t3, $t3, $t1
+	sub $t3, $t3, $t2
+	
+	#m = mes + 12*a -2
+	addi $t6, $zero, 12
+	mul $t4, $t6, $t2
+	add $t4, $t4, $t0
+	addi $t4, $t4, -2
+
+	
+	addi $t8, $zero, 4
+	addi $t1, $zero, 100
+	addi $t5, $zero, 400
+	addi $t6, $zero, 31
+	addi $t7, $zero, 12
+	div $t3, $t8
+	mflo $t8
+	div $t3, $t1
+	mflo $t1
+	div $t3, $t5
+	mflo $t5
+	mul $t6, $t6, $t4
+	div $t6, $t7
+	mflo $t6 
+	
+	#d = [mes + y + (y/4) - (y/100) + (y/400) + ((31*m)/12)] mod 7
+	addi $t0, $zero, 7
+	add $t7, $zero, $t9
+	add $t7, $t7, $t3
+	add $t7, $t7, $t8
+	sub $t7, $t7, $t1
+	add $t7, $t7, $t5
+	add $t7, $t7, $t6
+	
+	div $t7, $t0
+	mfhi $t7
+	
+	add $v0, $t7, $zero
+	
+	jr $ra
